@@ -1,0 +1,9 @@
+C:\Users\adesmarais\Documents\Github\AzureStorageQueue\AzureStorageQueues.Tests\bin\Debug\AzureStorageQueues.Tests.dll
+C:\Users\adesmarais\Documents\Github\AzureStorageQueue\AzureStorageQueues.Tests\bin\Debug\AzureStorageQueues.Tests.pdb
+C:\Users\adesmarais\Documents\Github\AzureStorageQueue\AzureStorageQueues.Tests\bin\Debug\nunit.framework.dll
+C:\Users\adesmarais\Documents\Github\AzureStorageQueue\AzureStorageQueues.Tests\bin\Debug\nunit.framework.xml
+C:\Users\adesmarais\Documents\Github\AzureStorageQueue\AzureStorageQueues.Tests\obj\Debug\AzureStorageQueues.Tests.csprojResolveAssemblyReference.cache
+C:\Users\adesmarais\Documents\Github\AzureStorageQueue\AzureStorageQueues.Tests\obj\Debug\AzureStorageQueues.Tests.dll
+C:\Users\adesmarais\Documents\Github\AzureStorageQueue\AzureStorageQueues.Tests\obj\Debug\AzureStorageQueues.Tests.pdb
+C:\Users\adesmarais\Documents\Github\AzureStorageQueue\AzureStorageQueues.Tests\bin\Debug\AzureStorageQueues.dll
+C:\Users\adesmarais\Documents\Github\AzureStorageQueue\AzureStorageQueues.Tests\bin\Debug\AzureStorageQueues.pdb

@@ -9,6 +9,7 @@ namespace AzureStorageQueues.Tests
 		[Test]
 		public void WhenAnAzureStorageQueueIsInstantiatedThenItDoesNotThrow()
 		{
+			Assert.DoesNotThrow(() => new AzureStorageQueueService("", ""));
 		}
 	}
 }
