@@ -32,6 +32,8 @@ namespace AzureStorageQueues
 		{
 			var accountCredentials = new StorageCredentials(_storageAccountName, _storageAccountKey);
 			_storageAccount = new CloudStorageAccount(accountCredentials, true);
+
+			// Added a comment
 		}
 	}
 }
