@@ -1,6 +1,8 @@
 ﻿using AzureStorageQueues.Contracts;
+using AzureStorageQueues.Entities;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Auth;
+using Microsoft.WindowsAzure.Storage.Queue;
 using Microsoft.WindowsAzure.Storage.Queue.Protocol;
 using System;
 using System.Collections.Generic;
@@ -12,28 +14,48 @@ namespace AzureStorageQueues
 {
 	public class AzureStorageQueueService : IAzureStorageQueueService
 	{
-		private string _storageAccountName;
-		private string _storageAccountKey;
+		private readonly string _storageConnectionString;
 
-		public CloudStorageAccount _storageAccount;
+		private CloudStorageAccount _storageAccount;
+		private CloudQueueClient _queueServiceClient;
 
-		public AzureStorageQueueService(string storageAccountName, string storageAccountKey)
+
+		public AzureStorageQueueService(string storageConnectionString, int timeoutInSeconds)
 		{
-			_storageAccountName = storageAccountName;
-			_storageAccountKey = storageAccountKey;
+			_storageConnectionString = storageConnectionString;
 
-			Initialize();
-
-			var queueServiceClient = _storageAccount.CreateCloudQueueClient();
-			var queueList = queueServiceClient.ListQueues(queueListingDetails: QueueListingDetails.Metadata);
+			// Order of operations is significant here, storage account must be initialized first
+			_storageAccount = InitializeStorageAccount();
+			_queueServiceClient = InitializeQueueClientService(timeoutInSeconds);
 		}
 
-		private void Initialize()
+		private CloudStorageAccount InitializeStorageAccount()
 		{
-			var accountCredentials = new StorageCredentials(_storageAccountName, _storageAccountKey);
-			_storageAccount = new CloudStorageAccount(accountCredentials, true);
+			return CloudStorageAccount.Parse(_storageConnectionString);
+		}
 
-			// Added a comment
+		private CloudQueueClient InitializeQueueClientService(int timeoutInSeconds)
+		{
+			var queueServiceClient = _storageAccount.CreateCloudQueueClient();
+			queueServiceClient.DefaultRequestOptions.ServerTimeout = new TimeSpan(0, 0, timeoutInSeconds);
+			return queueServiceClient;
+		}
+
+		public StorageQueue[] GetStorageQueues()
+		{
+			var queues = _queueServiceClient.ListQueues(queueListingDetails: QueueListingDetails.Metadata);
+			var queueEntities = new List<StorageQueue>();
+			foreach(var queue in queues)
+			{
+				var queueEntity = CreateAzureQueueEntity(queue.Name, queue.Uri, queue.Metadata, queue.ApproximateMessageCount);
+				queueEntities.Add(queueEntity);
+			}
+			return queueEntities.ToArray();
+		}
+
+		private StorageQueue CreateAzureQueueEntity(string queueName, Uri uri, IDictionary<string, string> metadata, int? approximateMessageCount)
+		{
+			return new StorageQueue(queueName, uri, metadata, approximateMessageCount);
 		}
 	}
 }

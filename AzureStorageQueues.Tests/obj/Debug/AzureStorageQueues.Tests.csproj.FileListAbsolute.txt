@@ -8,7 +8,6 @@ C:\Users\adesmarais\Documents\Github\AzureStorageQueue\AzureStorageQueues.Tests\
 C:\Users\adesmarais\Documents\Github\AzureStorageQueue\AzureStorageQueues.Tests\bin\Debug\AzureStorageQueues.dll
 C:\Users\adesmarais\Documents\Github\AzureStorageQueue\AzureStorageQueues.Tests\bin\Debug\AzureStorageQueues.pdb
 C:\Users\adesmarais\Documents\Github\AzureStorageQueue\AzureStorageQueues.Tests\bin\Debug\AzureStorageQueues.Tests.dll.config
-C:\Users\adesmarais\Documents\Github\AzureStorageQueue\AzureStorageQueues.Tests\bin\Debug\Microsoft.WindowsAzure.Storage.dll
 C:\Users\adesmarais\Documents\Github\AzureStorageQueue\AzureStorageQueues.Tests\bin\Debug\Microsoft.Data.Edm.dll
 C:\Users\adesmarais\Documents\Github\AzureStorageQueue\AzureStorageQueues.Tests\bin\Debug\Microsoft.Data.Services.Client.dll
 C:\Users\adesmarais\Documents\Github\AzureStorageQueue\AzureStorageQueues.Tests\bin\Debug\Microsoft.Data.OData.dll
