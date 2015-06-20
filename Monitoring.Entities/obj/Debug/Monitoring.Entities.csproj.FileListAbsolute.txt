@@ -1,0 +1,12 @@
+C:\Users\adesmarais\Documents\Github\AzureStorageQueue\Monitoring.Entities\bin\Debug\Monitoring.Entities.dll.config
+C:\Users\adesmarais\Documents\Github\AzureStorageQueue\Monitoring.Entities\bin\Debug\Monitoring.Entities.dll
+C:\Users\adesmarais\Documents\Github\AzureStorageQueue\Monitoring.Entities\bin\Debug\Monitoring.Entities.pdb
+C:\Users\adesmarais\Documents\Github\AzureStorageQueue\Monitoring.Entities\bin\Debug\EntityFramework.dll
+C:\Users\adesmarais\Documents\Github\AzureStorageQueue\Monitoring.Entities\bin\Debug\EntityFramework.SqlServer.dll
+C:\Users\adesmarais\Documents\Github\AzureStorageQueue\Monitoring.Entities\bin\Debug\EntityFramework.xml
+C:\Users\adesmarais\Documents\Github\AzureStorageQueue\Monitoring.Entities\bin\Debug\EntityFramework.SqlServer.xml
+C:\Users\adesmarais\Documents\Github\AzureStorageQueue\Monitoring.Entities\obj\Debug\Monitoring.Entities.dll
+C:\Users\adesmarais\Documents\Github\AzureStorageQueue\Monitoring.Entities\obj\Debug\Monitoring.Entities.pdb
+C:\Users\adesmarais\Documents\Github\AzureStorageQueue\Monitoring.Entities\obj\Debug\Monitoring.Entities.Migrations.InitialCreate.resources
+C:\Users\adesmarais\Documents\Github\AzureStorageQueue\Monitoring.Entities\obj\Debug\Monitoring.Entities.csproj.GenerateResource.Cache
+C:\Users\adesmarais\Documents\Github\AzureStorageQueue\Monitoring.Entities\obj\Debug\Monitoring.Entities.Migrations.AddUriandItemCountColumns.resources
