@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Context\MonitoringContext.cs" />
+    <Compile Include="Contracts\IMonitoringContext.cs" />
     <Compile Include="Entities\BaseEntity.cs" />
     <Compile Include="Entities\Queue.cs" />
     <Compile Include="Migrations\201506172343300_InitialCreate.cs" />
@@ -75,6 +76,7 @@
       <DependentUpon>201506190006427_Add Uri and ItemCount Columns.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
+  <Import Project="..\ApplicationFramework\ApplicationFramework.projitems" Label="Shared" Condition="Exists('..\ApplicationFramework\ApplicationFramework.projitems')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

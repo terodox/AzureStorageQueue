@@ -2,6 +2,7 @@
 using AzureStorageQueues.Contracts;
 using AzureStorageQueues.Entities;
 using Monitoring.Entities.Context;
+using Monitoring.Entities.Contracts;
 using Monitoring.Entities.Entities;
 using System;
 using System.Collections.Generic;
@@ -9,29 +10,28 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Monitoring.Console.Services
+namespace Monitoring.Business.Services
 {
 	public class StorageQueueDatabaseLogger
 	{
 		private IAzureStorageQueueService _storageQueueService;
+		private IMonitoringContext _monitoringContext;
 
-		public StorageQueueDatabaseLogger(IAzureStorageQueueService storageQueueService)
+		public StorageQueueDatabaseLogger(IAzureStorageQueueService storageQueueService, IMonitoringContext monitoringContext)
 		{
 			_storageQueueService = storageQueueService;
+			_monitoringContext = monitoringContext;
 		}
 
 		public void LogAllStorageQueuesToDatabase()
 		{
 			var storageQueues = GetQueueInfo();
 
-			using (var ctx = new MonitoringContext())
-			{
-				HandleStorageQueues(storageQueues, ctx);
-				ctx.SaveChanges();
-			}
+			HandleStorageQueues(storageQueues, _monitoringContext);
+			_monitoringContext.SaveChanges();
 		}
 
-		private void HandleStorageQueues(IEnumerable<StorageQueue> storageQueues, MonitoringContext ctx)
+		private void HandleStorageQueues(IEnumerable<StorageQueue> storageQueues, IMonitoringContext ctx)
 		{
 			foreach (var storageQueue in storageQueues)
 			{
@@ -48,7 +48,7 @@ namespace Monitoring.Console.Services
 			}
 		}
 
-		private void AddStorageQueueToDatabase(MonitoringContext ctx, StorageQueue storageQueue)
+		private void AddStorageQueueToDatabase(IMonitoringContext ctx, StorageQueue storageQueue)
 		{
 			ctx.Queues.Add(GenerateQueueEntity(storageQueue));
 		}

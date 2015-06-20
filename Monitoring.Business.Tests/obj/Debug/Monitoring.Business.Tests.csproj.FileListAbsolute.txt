@@ -1,0 +1,5 @@
+C:\Users\adesmarais\Documents\Github\AzureStorageQueue\Monitoring.Business.Tests\bin\Debug\Monitoring.Business.Tests.dll
+C:\Users\adesmarais\Documents\Github\AzureStorageQueue\Monitoring.Business.Tests\bin\Debug\Monitoring.Business.Tests.pdb
+C:\Users\adesmarais\Documents\Github\AzureStorageQueue\Monitoring.Business.Tests\obj\Debug\Monitoring.Business.Tests.csprojResolveAssemblyReference.cache
+C:\Users\adesmarais\Documents\Github\AzureStorageQueue\Monitoring.Business.Tests\obj\Debug\Monitoring.Business.Tests.dll
+C:\Users\adesmarais\Documents\Github\AzureStorageQueue\Monitoring.Business.Tests\obj\Debug\Monitoring.Business.Tests.pdb

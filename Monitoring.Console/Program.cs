@@ -1,6 +1,6 @@
 ﻿using AzureStorageQueues;
 using AzureStorageQueues.Entities;
-using Monitoring.Console.Services;
+using Monitoring.Business.Services;
 using Monitoring.Entities.Context;
 using Monitoring.Entities.Entities;
 using System;
@@ -15,8 +15,15 @@ namespace Monitoring.Console
 	{
 		static void Main(string[] args)
 		{
-			var storageQueueLogger = new StorageQueueDatabaseLogger();
-			storageQueueLogger.LogAllStorageQueuesToDatabase();
+			var azureStorageQueueService = new AzureStorageQueueService(
+				Constants.STORAGE_CONNECTION_STRING, 
+				Constants.STORAGE_TIMEOUT_IN_SECONDS);
+
+			using(var monitoringContext = new MonitoringContext())
+			{
+				var storageQueueLogger = new StorageQueueDatabaseLogger(azureStorageQueueService, monitoringContext);
+				storageQueueLogger.LogAllStorageQueuesToDatabase();
+			}
 		}
 	}
 }

@@ -1,4 +1,5 @@
-﻿using Monitoring.Entities.Entities;
+﻿using Monitoring.Entities.Contracts;
+using Monitoring.Entities.Entities;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -8,10 +9,10 @@ using System.Threading.Tasks;
 
 namespace Monitoring.Entities.Context
 {
-	public class MonitoringContext : DbContext
+	public class MonitoringContext : DbContext, IMonitoringContext
 	{
 		public MonitoringContext() : base("name=MonitoringContext") { }
 
-		public DbSet<Queue> Queues { get; set; }
+		public IDbSet<Queue> Queues { get; set; }
 	}
 }

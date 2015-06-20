@@ -58,3 +58,5 @@ C:\Users\adesmarais\Documents\Github\AzureStorageQueue\Monitoring.Console\bin\De
 C:\Users\adesmarais\Documents\Github\AzureStorageQueue\Monitoring.Console\bin\Debug\ru\System.Spatial.resources.dll
 C:\Users\adesmarais\Documents\Github\AzureStorageQueue\Monitoring.Console\bin\Debug\zh-Hans\System.Spatial.resources.dll
 C:\Users\adesmarais\Documents\Github\AzureStorageQueue\Monitoring.Console\bin\Debug\zh-Hant\System.Spatial.resources.dll
+C:\Users\adesmarais\Documents\Github\AzureStorageQueue\Monitoring.Console\bin\Debug\Monitoring.Business.dll
+C:\Users\adesmarais\Documents\Github\AzureStorageQueue\Monitoring.Console\bin\Debug\Monitoring.Business.pdb
