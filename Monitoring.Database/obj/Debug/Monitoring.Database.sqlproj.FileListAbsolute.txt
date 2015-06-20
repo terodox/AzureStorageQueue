@@ -1,5 +1,0 @@
-C:\Users\adesmarais\Documents\Github\AzureStorageQueue\Monitoring.Database\bin\Debug\Monitoring.Database.dacpac
-C:\Users\adesmarais\Documents\Github\AzureStorageQueue\Monitoring.Database\bin\Debug\Monitoring.Database.dll
-C:\Users\adesmarais\Documents\Github\AzureStorageQueue\Monitoring.Database\bin\Debug\Monitoring.Database.pdb
-C:\Users\adesmarais\Documents\Github\AzureStorageQueue\Monitoring.Database\obj\Debug\Monitoring.Database.dll
-C:\Users\adesmarais\Documents\Github\AzureStorageQueue\Monitoring.Database\obj\Debug\Monitoring.Database.pdb
