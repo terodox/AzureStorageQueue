@@ -11,4 +11,7 @@
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Contracts\" />
   </ItemGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)UnitTests\MockDbContextHelpers.cs" />
+  </ItemGroup>
 </Project>

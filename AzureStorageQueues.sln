@@ -19,6 +19,7 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "ApplicationFramework", "App
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		ApplicationFramework\ApplicationFramework.projitems*{90759bab-7b09-45d2-abe7-5db58f67e3a5}*SharedItemsImports = 4
 		ApplicationFramework\ApplicationFramework.projitems*{37074212-4f3c-4cf0-9aee-14f638b09a31}*SharedItemsImports = 4
 		ApplicationFramework\ApplicationFramework.projitems*{8dc3da33-21fc-4300-ad1b-dcd8ce526775}*SharedItemsImports = 13
 	EndGlobalSection
