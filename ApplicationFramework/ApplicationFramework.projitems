@@ -8,10 +8,4 @@
   <PropertyGroup Label="Configuration">
     <Import_RootNamespace>ApplicationFramework</Import_RootNamespace>
   </PropertyGroup>
-  <ItemGroup>
-    <Folder Include="$(MSBuildThisFileDirectory)Contracts\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)UnitTests\MockDbContextHelpers.cs" />
-  </ItemGroup>
 </Project>

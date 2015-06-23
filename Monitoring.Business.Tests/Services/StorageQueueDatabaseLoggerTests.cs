@@ -22,26 +22,38 @@ namespace Monitoring.Business.Tests.Services
 	{
 		private StorageQueueDatabaseLogger _sut;
 		private Mock<IAzureStorageQueueService> _azureStorageQueueServiceMock;
-		private Mock<IMonitoringContext> _monitoringContextMock;
-
-		[SetUp]
-		public void InitializeTest()
-		{
-			_azureStorageQueueServiceMock = MockAzureStorageQueueService();
-			_monitoringContextMock =MockMonitoringContextHelper.MockMonitoringContext();
-			_sut = new StorageQueueDatabaseLogger(_azureStorageQueueServiceMock.Object, _monitoringContextMock.Object);
-		}
+		private MockMonitoringContextInfo _monitoringContextMockInfo;
 
 		[TearDown]
 		public void CleanupTest()
 		{
 			_sut = null;
 			_azureStorageQueueServiceMock = null;
-			_monitoringContextMock = null;
+			_monitoringContextMockInfo = null;
 		}
 
+		#region Initialization Helpers
+		private void InitializeTestWithNewData()
+		{
+			_azureStorageQueueServiceMock = MockAzureStorageQueueServiceWithNewData();
+			_monitoringContextMockInfo = MockMonitoringContextHelper.GenerateMockMonitoringContextInfo();
+			_sut = new StorageQueueDatabaseLogger(
+				_azureStorageQueueServiceMock.Object,
+				_monitoringContextMockInfo.MonitoringContextMock.Object);
+		}
+
+		private void InitializeTestWithExistingData()
+		{
+			_azureStorageQueueServiceMock = MockAzureStorageQueueServiceWithExistingData();
+			_monitoringContextMockInfo = MockMonitoringContextHelper.GenerateMockMonitoringContextInfo();
+			_sut = new StorageQueueDatabaseLogger(
+				_azureStorageQueueServiceMock.Object,
+				_monitoringContextMockInfo.MonitoringContextMock.Object);
+		}
+		#endregion
+
 		#region Setup Mocks
-		private Mock<IAzureStorageQueueService> MockAzureStorageQueueService()
+		private Mock<IAzureStorageQueueService> MockAzureStorageQueueServiceWithNewData()
 		{
 			var mock = new Mock<IAzureStorageQueueService>();
 
@@ -51,12 +63,26 @@ namespace Monitoring.Business.Tests.Services
 			return mock;
 		}
 
-		private IEnumerable<StorageQueue> GenerateStorageQueueEnumerable(int count = 3, int startingIndex = 0)
+		private Mock<IAzureStorageQueueService> MockAzureStorageQueueServiceWithExistingData()
+		{
+			var mock = new Mock<IAzureStorageQueueService>();
+
+			mock.Setup(asqs => asqs.GetStorageQueues())
+				.Returns(
+					GenerateStorageQueueEnumerable(
+						queueName: MockMonitoringContextHelper.FAKE_QUEUE_NAME,
+						queueUri: MockMonitoringContextHelper.FAKE_QUEUE_URI)
+					.ToArray());
+
+			return mock;
+		}
+
+		private IEnumerable<StorageQueue> GenerateStorageQueueEnumerable(int count = 3, int startingIndex = 0, string queueName = "Storage Queue", string queueUri = "http://www.storagequeue{0}.com")
 		{
 			return Enumerable.Range(startingIndex, count)
 				.Select(i => new StorageQueue(
-					"Storage Queue" + i,
-					new Uri("http://storage.queue" + i + ".com"),
+					queueName + i,
+					new Uri(string.Format(queueUri, i)),
 					new Dictionary<string, string>(),
 					i
 					));
@@ -64,12 +90,64 @@ namespace Monitoring.Business.Tests.Services
 		#endregion
 
 		[Test]
-		public void WhenInstatiatedIDoNotThrow() { }
+		public void WhenInstatiatedIDoNotThrow() 
+		{
+			// Arrange + Act
+			InitializeTestWithNewData();
+		}
 
 		[Test]
 		public void WhenLogAllStorageQueuesToDatabaseThenDoNotThrow()
 		{
+			// Arrange 
+			InitializeTestWithNewData();
+
+			// Act
 			_sut.LogAllStorageQueuesToDatabase();
+		}
+
+		[Test]
+		public void WhenLogAllStorageQueuesToDatabaseAndTheDatabaseIsEmptyThenAllFoundStorageQueuesAreAdded()
+		{
+			// Arrange
+			InitializeTestWithNewData();
+			_monitoringContextMockInfo = MockMonitoringContextHelper.GenerateEmptyMockMonitoringContextInfo();
+			_sut = new StorageQueueDatabaseLogger(
+				_azureStorageQueueServiceMock.Object,
+				_monitoringContextMockInfo.MonitoringContextMock.Object
+				);
+
+			// Act
+			_sut.LogAllStorageQueuesToDatabase();
+
+			// Assert
+			_monitoringContextMockInfo.QueueDbSetMock.Verify(q => q.Add(It.IsAny<Queue>()), Times.Exactly(3));
+		}
+
+		[Test]
+		public void WhenLogAllStorageQueuesToDatabaseAndTheDatabaseHasAllEntriesThenNoNewEntitiesAreAdded()
+		{
+			// Arrange
+			InitializeTestWithExistingData();
+
+			// Act
+			_sut.LogAllStorageQueuesToDatabase();
+
+			// Assert
+			_monitoringContextMockInfo.QueueDbSetMock.Verify(q => q.Add(It.IsAny<Queue>()), Times.Never);
+		}
+
+		[Test]
+		public void WhenLogAllStorageQueuesToDatabaseAndTheDatabaseHasAllEntriesThenAllEntitiesAreUpdated()
+		{
+			// Arrange
+			InitializeTestWithExistingData();
+
+			// Act
+			_sut.LogAllStorageQueuesToDatabase();
+
+			// Assert
+			_monitoringContextMockInfo.QueueDbSetMock.Verify(q => q.Add(It.IsAny<Queue>()), Times.Exactly(3));
 		}
 	}
 }

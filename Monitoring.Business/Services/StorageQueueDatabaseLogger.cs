@@ -55,6 +55,7 @@ namespace Monitoring.Business.Services
 
 		private void UpdateStorageQueueInDatabase(StorageQueue storageQueue, IQueryable<Queue> queueEntityQuery)
 		{
+			// Potentially need to abstract this update to a business class to allow for better testing of behavior...
 			var queueEntity = queueEntityQuery.First();
 			queueEntity.ItemCount = storageQueue.ApproximateMessageCount;
 			queueEntity.Uri = PrepareUriForDatabase(storageQueue.Uri);

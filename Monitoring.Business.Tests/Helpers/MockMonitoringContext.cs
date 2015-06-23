@@ -10,15 +10,52 @@ using System.Threading.Tasks;
 
 namespace Monitoring.Business.Tests.Helpers
 {
+	public class MockMonitoringContextInfo
+	{
+		public Mock<IMonitoringContext> MonitoringContextMock { get; set; }
+
+		// DbSets
+		public Mock<IDbSet<Queue>> QueueDbSetMock { get; set; }
+	}
+
 	public static class MockMonitoringContextHelper
 	{
-		public static Mock<IMonitoringContext> MockMonitoringContext()
+		public const string FAKE_QUEUE_NAME = "Fake Queue ";
+		public const string FAKE_QUEUE_URI = "http://storage.queue{0}.com";
+
+		public static MockMonitoringContextInfo GenerateMockMonitoringContextInfo()
 		{
-			var mock = new Mock<IMonitoringContext>();
-			var mockDbSet = MockQueuesDbSet();
+			var mock = MockMonitoringContextInfo();
+			var mockQueueDbSet = MockQueuesDbSet();
 
 			mock.SetupGet(mc => mc.Queues)
-				.Returns(mockDbSet.Object);
+				.Returns(mockQueueDbSet.Object);
+
+			return new MockMonitoringContextInfo()
+			{
+				MonitoringContextMock = mock,
+				QueueDbSetMock = mockQueueDbSet
+			};
+		}
+
+		public static MockMonitoringContextInfo GenerateEmptyMockMonitoringContextInfo()
+		{
+			var mock = MockMonitoringContextInfo();
+			var mockQueueDbSet = MockEmptyQueuesDbSet();
+
+			mock.SetupGet(mc => mc.Queues)
+				.Returns(mockQueueDbSet.Object);
+
+			return new MockMonitoringContextInfo()
+			{
+				MonitoringContextMock = mock,
+				QueueDbSetMock = mockQueueDbSet
+			};
+		}
+
+		public static Mock<IMonitoringContext> MockMonitoringContextInfo()
+		{
+			var mock = new Mock<IMonitoringContext>();
 
 			return mock;
 		}
@@ -26,6 +63,13 @@ namespace Monitoring.Business.Tests.Helpers
 		public static Mock<IDbSet<Queue>> MockQueuesDbSet()
 		{
 			var queueQueryable = GenerateQueueEnumerable().AsQueryable();
+
+			return GenerateMockIDbSet(queueQueryable);
+		}
+
+		public static Mock<IDbSet<Queue>> MockEmptyQueuesDbSet()
+		{
+			var queueQueryable = GenerateQueueEnumerable(0, 0).AsQueryable();
 
 			return GenerateMockIDbSet(queueQueryable);
 		}
@@ -46,7 +90,11 @@ namespace Monitoring.Business.Tests.Helpers
 			return mock;
 		}
 
-		public static IEnumerable<Queue> GenerateQueueEnumerable(int count = 3, int startingIndex = 0)
+		public static IEnumerable<Queue> GenerateQueueEnumerable(
+			int count = 10, 
+			int startingIndex = 0, 
+			string queueName = FAKE_QUEUE_NAME, 
+			string queueUri = FAKE_QUEUE_URI)
 		{
 			return Enumerable.Range(startingIndex, count)
 				.Select(i => new Queue()
@@ -55,8 +103,8 @@ namespace Monitoring.Business.Tests.Helpers
 					Updated = new DateTime(2000, 1, 1, 0, 0, 0),
 					Id = i,
 					ItemCount = i,
-					Name = "Fake Queue " + i,
-					Uri = "http://storage.queue" + i + ".com"
+					Name = queueName + i,
+					Uri = string.Format(queueUri, i)
 				});
 		}
 	}
