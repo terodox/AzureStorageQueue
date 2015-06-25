@@ -50,7 +50,10 @@ namespace Monitoring.Business.Services
 
 		private void AddStorageQueueToDatabase(StorageQueue storageQueue)
 		{
-			_queueBusiness.Insert(GenerateQueueEntity(storageQueue));
+			_queueBusiness.Insert(
+				storageQueue.Name,
+				storageQueue.Uri.ToString(),
+				storageQueue.ApproximateMessageCount);
 		}
 
 		private void UpdateStorageQueueInDatabase(int queueId, StorageQueue storageQueue)

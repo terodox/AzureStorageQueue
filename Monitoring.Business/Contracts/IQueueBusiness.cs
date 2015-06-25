@@ -11,6 +11,7 @@ namespace Monitoring.Business.Services
 	public interface IQueueBusiness : IBusiness<Queue>
 	{
 		Queue[] FindByName(string queueName);
+		void Insert(string name, string Uri, int itemCount);
 		void Update(int id, int itemCount);
 	}
 }

@@ -33,14 +33,27 @@ namespace Monitoring.Business.Services
 			return _monitoringContext.Queues.Where(q => q.Id == id).First();
 		}
 
-		public void Insert(Queue newEntity)
+		public void Insert(string name, string Uri, int itemCount)
+		{
+			Insert(new Queue()
+				{
+					Name = name,
+					ItemCount = itemCount,
+					Uri = Uri,
+					Created = DateTime.Now,
+					Updated = DateTime.Now
+				});
+		}
+
+		private void Insert(Queue newEntity)
 		{
 			_monitoringContext.Queues.Add(newEntity);
 			_monitoringContext.SaveChanges();
 		}
 
-		public void Delete(Queue entityToDelete)
+		public void Delete(int id)
 		{
+			var entityToDelete = Get(id);
 			_monitoringContext.Queues.Remove(entityToDelete);
 			_monitoringContext.SaveChanges();
 		}

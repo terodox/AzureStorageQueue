@@ -10,7 +10,6 @@ namespace Monitoring.Business.Contracts
 	{
 		T Find(int id);
 		T Get(int id);
-		void Insert(T newEntity);
-		void Delete(T entityToDelete);
+		void Delete(int id);
 	}
 }

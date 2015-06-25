@@ -107,10 +107,13 @@ namespace Monitoring.Business.Tests.Services
 			InitializeQueueBusiness();
 
 			// Act
-			_sut.Insert(MockMonitoringContextHelper.GenerateFakeQueueEntity(queueName, "http://Idontexist.com", 0));
+			_sut.Insert(queueName, "http://Idontexist.com", 0);
 
+			// Assert
 			_monitoringContextMock.QueueDbSetMock
-				.Verify(qdbs => qdbs.Add(It.Is<Queue>(q => q.Name == queueName + "0")), Times.Once);
+				.Verify(qdbs => qdbs.Add(It.Is<Queue>(q => q.Name == queueName)), Times.Once);
 		}
+
+		
 	}
 }

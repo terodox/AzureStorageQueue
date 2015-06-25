@@ -164,7 +164,7 @@ namespace Monitoring.Business.Tests.Services
 			_sut.LogAllStorageQueuesToDatabase();
 
 			// Assert
-			_queueBusinessMock.Verify(q => q.Insert(It.IsAny<Queue>()), Times.Exactly(3));
+			_queueBusinessMock.Verify(q => q.Insert(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>()), Times.Exactly(3));
 		}
 
 		[Test]
@@ -177,7 +177,7 @@ namespace Monitoring.Business.Tests.Services
 			_sut.LogAllStorageQueuesToDatabase();
 
 			// Assert
-			_queueBusinessMock.Verify(q => q.Insert(It.IsAny<Queue>()), Times.Never);
+			_queueBusinessMock.Verify(q => q.Insert(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>()), Times.Never);
 		}
 
 		[Test]
