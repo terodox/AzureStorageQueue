@@ -46,7 +46,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Contracts\IAzureStorageLogger.cs" />
+    <Compile Include="Contracts\IBusiness.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Contracts\IQueueBusiness.cs" />
+    <Compile Include="Services\QueueBusiness.cs" />
     <Compile Include="Services\StorageQueueDatabaseLogger.cs" />
   </ItemGroup>
   <ItemGroup />

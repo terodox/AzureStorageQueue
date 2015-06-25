@@ -21,7 +21,8 @@ namespace Monitoring.Console
 
 			using(var monitoringContext = new MonitoringContext())
 			{
-				var storageQueueLogger = new StorageQueueDatabaseLogger(azureStorageQueueService, monitoringContext);
+				var queueBusiness = new QueueBusiness(monitoringContext);
+				var storageQueueLogger = new StorageQueueDatabaseLogger(azureStorageQueueService, queueBusiness);
 				storageQueueLogger.LogAllStorageQueuesToDatabase();
 			}
 		}

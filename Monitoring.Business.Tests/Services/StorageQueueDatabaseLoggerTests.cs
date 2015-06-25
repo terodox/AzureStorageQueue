@@ -22,33 +22,33 @@ namespace Monitoring.Business.Tests.Services
 	{
 		private StorageQueueDatabaseLogger _sut;
 		private Mock<IAzureStorageQueueService> _azureStorageQueueServiceMock;
-		private MockMonitoringContextInfo _monitoringContextMockInfo;
+		private Mock<IQueueBusiness> _queueBusinessMock;
+		
 
 		[TearDown]
 		public void CleanupTest()
 		{
 			_sut = null;
 			_azureStorageQueueServiceMock = null;
-			_monitoringContextMockInfo = null;
 		}
 
 		#region Initialization Helpers
 		private void InitializeTestWithNewData()
 		{
 			_azureStorageQueueServiceMock = MockAzureStorageQueueServiceWithNewData();
-			_monitoringContextMockInfo = MockMonitoringContextHelper.GenerateMockMonitoringContextInfo();
+			_queueBusinessMock = MockQueueBusiness();
 			_sut = new StorageQueueDatabaseLogger(
 				_azureStorageQueueServiceMock.Object,
-				_monitoringContextMockInfo.MonitoringContextMock.Object);
+				_queueBusinessMock.Object);
 		}
 
 		private void InitializeTestWithExistingData()
 		{
 			_azureStorageQueueServiceMock = MockAzureStorageQueueServiceWithExistingData();
-			_monitoringContextMockInfo = MockMonitoringContextHelper.GenerateMockMonitoringContextInfo();
+			_queueBusinessMock = MockQueueBusiness();
 			_sut = new StorageQueueDatabaseLogger(
 				_azureStorageQueueServiceMock.Object,
-				_monitoringContextMockInfo.MonitoringContextMock.Object);
+				_queueBusinessMock.Object);
 		}
 		#endregion
 
@@ -71,21 +71,64 @@ namespace Monitoring.Business.Tests.Services
 				.Returns(
 					GenerateStorageQueueEnumerable(
 						queueName: MockMonitoringContextHelper.FAKE_QUEUE_NAME,
-						queueUri: MockMonitoringContextHelper.FAKE_QUEUE_URI)
+						queueUri: MockMonitoringContextHelper.FAKE_QUEUE_URI,
+						queueSizeOffset: 10)
 					.ToArray());
 
 			return mock;
 		}
 
-		private IEnumerable<StorageQueue> GenerateStorageQueueEnumerable(int count = 3, int startingIndex = 0, string queueName = "Storage Queue", string queueUri = "http://www.storagequeue{0}.com")
+		private IEnumerable<StorageQueue> GenerateStorageQueueEnumerable(
+			int count = 3, 
+			int startingIndex = 0, 
+			string queueName = "Storage Queue", 
+			string queueUri = "http://www.storagequeue{0}.com",
+			int queueSizeOffset = 0)
 		{
 			return Enumerable.Range(startingIndex, count)
 				.Select(i => new StorageQueue(
 					queueName + i,
 					new Uri(string.Format(queueUri, i)),
 					new Dictionary<string, string>(),
-					i
+					i + queueSizeOffset
 					));
+		}
+
+		private Mock<IQueueBusiness> MockQueueBusiness()
+		{
+			var mock = new Mock<IQueueBusiness>();
+
+			SetupFindByNameForRequiredIndices(mock);
+
+			return mock;
+		}
+
+		private void SetupFindByNameForRequiredIndices(Mock<IQueueBusiness> mock)
+		{
+			Enumerable.Range(0, 3)
+				.Select(index =>
+				{
+					mock
+						.Setup(qb => qb.FindByName(It.Is<string>(s => s == MockMonitoringContextHelper.FAKE_QUEUE_NAME + index)))
+						.Returns(GenerateQueueArrayForId(index));
+					return index;
+				})
+				.ToArray();
+		}
+
+		private Queue[] GenerateQueueArrayForId(int index)
+		{
+			return new[] { 
+					new Queue()
+					{
+						Id = 1,
+						Name = MockMonitoringContextHelper.FAKE_QUEUE_NAME + index,
+						Uri = MockMonitoringContextHelper.FAKE_QUEUE_URI + index,
+						ItemCount = index,
+						Created = DateTime.Now,
+						Updated = DateTime.Now
+					}
+				};
 		}
 		#endregion
 
@@ -111,17 +154,17 @@ namespace Monitoring.Business.Tests.Services
 		{
 			// Arrange
 			InitializeTestWithNewData();
-			_monitoringContextMockInfo = MockMonitoringContextHelper.GenerateEmptyMockMonitoringContextInfo();
+			_queueBusinessMock = MockQueueBusiness();
 			_sut = new StorageQueueDatabaseLogger(
 				_azureStorageQueueServiceMock.Object,
-				_monitoringContextMockInfo.MonitoringContextMock.Object
+				_queueBusinessMock.Object
 				);
 
 			// Act
 			_sut.LogAllStorageQueuesToDatabase();
 
 			// Assert
-			_monitoringContextMockInfo.QueueDbSetMock.Verify(q => q.Add(It.IsAny<Queue>()), Times.Exactly(3));
+			_queueBusinessMock.Verify(q => q.Insert(It.IsAny<Queue>()), Times.Exactly(3));
 		}
 
 		[Test]
@@ -134,7 +177,7 @@ namespace Monitoring.Business.Tests.Services
 			_sut.LogAllStorageQueuesToDatabase();
 
 			// Assert
-			_monitoringContextMockInfo.QueueDbSetMock.Verify(q => q.Add(It.IsAny<Queue>()), Times.Never);
+			_queueBusinessMock.Verify(q => q.Insert(It.IsAny<Queue>()), Times.Never);
 		}
 
 		[Test]
@@ -147,7 +190,7 @@ namespace Monitoring.Business.Tests.Services
 			_sut.LogAllStorageQueuesToDatabase();
 
 			// Assert
-			_monitoringContextMockInfo.QueueDbSetMock.Verify(q => q.Add(It.IsAny<Queue>()), Times.Exactly(3));
+			_queueBusinessMock.Verify(q => q.Update(It.IsAny<int>(), It.IsAny<int>()), Times.Exactly(3));
 		}
 	}
 }

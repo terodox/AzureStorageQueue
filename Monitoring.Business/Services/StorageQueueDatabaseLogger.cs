@@ -15,51 +15,47 @@ namespace Monitoring.Business.Services
 	public class StorageQueueDatabaseLogger
 	{
 		private IAzureStorageQueueService _storageQueueService;
-		private IMonitoringContext _monitoringContext;
+		private IQueueBusiness _queueBusiness;
 
-		public StorageQueueDatabaseLogger(IAzureStorageQueueService storageQueueService, IMonitoringContext monitoringContext)
+		public StorageQueueDatabaseLogger(
+			IAzureStorageQueueService storageQueueService, IQueueBusiness queueBusiness)
 		{
 			_storageQueueService = storageQueueService;
-			_monitoringContext = monitoringContext;
+			_queueBusiness = queueBusiness;
 		}
 
 		public void LogAllStorageQueuesToDatabase()
 		{
 			var storageQueues = GetQueueInfo();
 
-			HandleStorageQueues(storageQueues, _monitoringContext);
-			_monitoringContext.SaveChanges();
+			HandleStorageQueues(storageQueues);
 		}
 
-		private void HandleStorageQueues(IEnumerable<StorageQueue> storageQueues, IMonitoringContext ctx)
+		private void HandleStorageQueues(IEnumerable<StorageQueue> storageQueues)
 		{
 			foreach (var storageQueue in storageQueues)
 			{
-				var queueEntityQuery = ctx.Queues.Where(q => q.Name == storageQueue.Name);
+				var queueEntityQuery = _queueBusiness.FindByName(storageQueue.Name);
 				if (queueEntityQuery.Count() == 0)
 				{
-					AddStorageQueueToDatabase(ctx, storageQueue);
+					AddStorageQueueToDatabase(storageQueue);
 				}
 				else
 				{
-					UpdateStorageQueueInDatabase(storageQueue, queueEntityQuery);
+					UpdateStorageQueueInDatabase(queueEntityQuery.First().Id, storageQueue);
 				}
 
 			}
 		}
 
-		private void AddStorageQueueToDatabase(IMonitoringContext ctx, StorageQueue storageQueue)
+		private void AddStorageQueueToDatabase(StorageQueue storageQueue)
 		{
-			ctx.Queues.Add(GenerateQueueEntity(storageQueue));
+			_queueBusiness.Insert(GenerateQueueEntity(storageQueue));
 		}
 
-		private void UpdateStorageQueueInDatabase(StorageQueue storageQueue, IQueryable<Queue> queueEntityQuery)
+		private void UpdateStorageQueueInDatabase(int queueId, StorageQueue storageQueue)
 		{
-			// Potentially need to abstract this update to a business class to allow for better testing of behavior...
-			var queueEntity = queueEntityQuery.First();
-			queueEntity.ItemCount = storageQueue.ApproximateMessageCount;
-			queueEntity.Uri = PrepareUriForDatabase(storageQueue.Uri);
-			queueEntity.Updated = DateTime.Now;
+			_queueBusiness.Update(queueId, storageQueue.ApproximateMessageCount);
 		}
 
 		private IEnumerable<StorageQueue> GetQueueInfo()

@@ -16,6 +16,9 @@ namespace Monitoring.Business.Tests.Helpers
 
 		// DbSets
 		public Mock<IDbSet<Queue>> QueueDbSetMock { get; set; }
+
+		// DbSet Fake Data
+		public IEnumerable<Queue> QueueData { get; set; }
 	}
 
 	public static class MockMonitoringContextHelper
@@ -26,7 +29,8 @@ namespace Monitoring.Business.Tests.Helpers
 		public static MockMonitoringContextInfo GenerateMockMonitoringContextInfo()
 		{
 			var mock = MockMonitoringContextInfo();
-			var mockQueueDbSet = MockQueuesDbSet();
+			var queueEnumerable = GenerateQueueEnumerable();
+			var mockQueueDbSet = GenerateMockIDbSet(queueEnumerable.AsQueryable());
 
 			mock.SetupGet(mc => mc.Queues)
 				.Returns(mockQueueDbSet.Object);
@@ -34,7 +38,8 @@ namespace Monitoring.Business.Tests.Helpers
 			return new MockMonitoringContextInfo()
 			{
 				MonitoringContextMock = mock,
-				QueueDbSetMock = mockQueueDbSet
+				QueueDbSetMock = mockQueueDbSet,
+				QueueData = queueEnumerable
 			};
 		}
 
@@ -58,13 +63,6 @@ namespace Monitoring.Business.Tests.Helpers
 			var mock = new Mock<IMonitoringContext>();
 
 			return mock;
-		}
-
-		public static Mock<IDbSet<Queue>> MockQueuesDbSet()
-		{
-			var queueQueryable = GenerateQueueEnumerable().AsQueryable();
-
-			return GenerateMockIDbSet(queueQueryable);
 		}
 
 		public static Mock<IDbSet<Queue>> MockEmptyQueuesDbSet()
@@ -97,15 +95,20 @@ namespace Monitoring.Business.Tests.Helpers
 			string queueUri = FAKE_QUEUE_URI)
 		{
 			return Enumerable.Range(startingIndex, count)
-				.Select(i => new Queue()
-				{
-					Created = new DateTime(2000, 1, 1, 0, 0, 0),
-					Updated = new DateTime(2000, 1, 1, 0, 0, 0),
-					Id = i,
-					ItemCount = i,
-					Name = queueName + i,
-					Uri = string.Format(queueUri, i)
-				});
+				.Select(i => GenerateFakeQueueEntity(queueName, queueUri, i));
+		}
+
+		public static Queue GenerateFakeQueueEntity(string queueName, string queueUri, int index)
+		{
+			return new Queue()
+			{
+				Created = new DateTime(2000, 1, 1, 0, 0, 0),
+				Updated = new DateTime(2000, 1, 1, 0, 0, 0),
+				Id = index,
+				ItemCount = index,
+				Name = queueName + index,
+				Uri = string.Format(queueUri, index)
+			};
 		}
 	}
 }
